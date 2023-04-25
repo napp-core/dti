@@ -1,0 +1,11 @@
+{
+    "name": "@napp/dti-core",
+    "version": "1.0.0",
+    "description": "data transaction interface core library",
+    "types": "index.d.ts",
+    "main": "index.js",  
+    "keywords": ["napp", "Rest API", "API framework"],
+    "author": "Farcek <farcek@gmail.com>",
+    "license": "ISC"
+  }
+  
