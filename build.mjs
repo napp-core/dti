@@ -8,7 +8,7 @@ function readPk(file) {
 }
 
 { // core
-    let cPkg = readPk('core/package.json');
+    let cPkg = readPk('core.package.json');
     cPkg.version = mPkg.version;
     fs.writeFileSync('dist/core/package.json', JSON.stringify(cPkg, null, 4));
 
@@ -16,7 +16,7 @@ function readPk(file) {
 }
 
 { // client
-    let cPkg = readPk('client/package.json');
+    let cPkg = readPk('client.package.json');
     cPkg.version = mPkg.version;
     cPkg.dependencies["@napp/dti-core"] = mPkg.version;
     fs.writeFileSync('dist/client/package.json', JSON.stringify(cPkg, null, 4));
@@ -25,7 +25,7 @@ function readPk(file) {
 }
 
 { // server
-    let cPkg = readPk('server/package.json');
+    let cPkg = readPk('server.package.json');
     cPkg.version = mPkg.version;
     cPkg.dependencies["@napp/dti-core"] = mPkg.version;
     fs.writeFileSync('dist/server/package.json', JSON.stringify(cPkg, null, 4));

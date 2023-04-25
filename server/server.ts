@@ -1,6 +1,6 @@
 import { DtiError, DtiRoute } from "@napp/dti-core";
 import { DtiServerAction } from "./action";
-import { IMiddleware, OSetupParam } from "./common";
+import { OSetupParam } from "./common";
 import { DtiServerRoute } from "./route";
 
 export interface ODtiServer {
