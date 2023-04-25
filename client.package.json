@@ -2,6 +2,10 @@
     "name": "@napp/dti-client",
     "version": "1.0.0",
     "description": "data transaction interface client library",
+    "repository": {
+        "type": "git",
+        "url": "https://github.com/napp-core/dti.git"
+    },
     "types": "index.d.ts",
     "main": "index.js",
     "keywords": [
@@ -12,7 +16,7 @@
     "author": "Farcek <farcek@gmail.com>",
     "license": "ISC",
     "dependencies": {
-        "@napp/dti-core": "6.1.0",
+        "@napp/dti-core": "latest",
         "base64url": "latest",
         "cross-fetch": "latest"
     }
