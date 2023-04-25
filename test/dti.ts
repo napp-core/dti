@@ -3,19 +3,21 @@ import { IRawActionBuilder } from "../server";
 
 
 export namespace Test01Dti {
-    export interface UserItem {
+    export interface IUserItem {
         id: string;
         name: string;
         age: number;
     }
-    export interface UserListParam {
+    export interface IUserListParam {
         order: string;
     }
-    export interface UserListResult {
+    export interface IUserListResult {
 
         order: string;
-        items: UserItem[]
+        items: IUserItem[]
     }
+  
+    
 
     export interface UserCreateResult {
         id: string,
@@ -67,7 +69,7 @@ export namespace Test01Dti {
             }
         },
     });
-    export const userList = DtiAction.define<UserListResult, UserListParam>({
+    export const userList = DtiAction.define<IUserListResult, IUserListParam>({
         name: 'user-list', path: 'userlist', mode: DtiMode.QString,
         route: routeUser,
         validate(p) {

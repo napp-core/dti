@@ -2,10 +2,10 @@ import express, { Express, Request, Response } from 'express';
 
 
 import { Test01Dti } from "./dti";
-import { DtiServer, DtiServerActionFactory } from "@napp/dti-server";
+import { DtiServer, DtiServerAction } from "@napp/dti-server";
 
 
-const userCreate = DtiServerActionFactory.factory(Test01Dti.userCreate, {
+const userCreate = DtiServerAction.factory(Test01Dti.userCreate, {
     async action(param, ctx) {
 
         return {
@@ -18,7 +18,7 @@ const userCreate = DtiServerActionFactory.factory(Test01Dti.userCreate, {
     },
 })
 
-const userList = DtiServerActionFactory.factory(Test01Dti.userList, {
+const userList = DtiServerAction.factory(Test01Dti.userList, {
     async action(param, ctx) {
         
         return {
@@ -36,7 +36,7 @@ const userList = DtiServerActionFactory.factory(Test01Dti.userList, {
 
 
 
-const customerCreate = DtiServerActionFactory.factory(Test01Dti.customerCreate, {
+const customerCreate = DtiServerAction.factory(Test01Dti.customerCreate, {
     async action(param, ctx) {
         return {
             flag: true,
@@ -46,14 +46,14 @@ const customerCreate = DtiServerActionFactory.factory(Test01Dti.customerCreate, 
 })
 
 
-const customerList = DtiServerActionFactory.factory(Test01Dti.customerList, {
+const customerList = DtiServerAction.factory(Test01Dti.customerList, {
     async action(param, ctx) {
         return [param.code, param.name]
     },
 })
 
-const serverAdmin = new DtiServer(Test01Dti.routeAdmin, {});
-const serverWeb = new DtiServer(Test01Dti.routeWeb, {});
+const serverAdmin = new DtiServer(Test01Dti.routeAdmin);
+const serverWeb = new DtiServer(Test01Dti.routeWeb);
 
 
 serverWeb.register(userCreate, userList);

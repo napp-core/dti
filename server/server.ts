@@ -3,15 +3,12 @@ import { DtiServerAction } from "./action";
 import { OSetupParam } from "./common";
 import { DtiServerRoute } from "./route";
 
-export interface ODtiServer {
-
-}
 export interface IRawActionBuilder {
     (expressRoute: any): void
 }
 export class DtiServer {
 
-    constructor(private root: DtiRoute, private opt: ODtiServer) { }
+    constructor(private root: DtiRoute) { }
 
     private _actions = new Map<string, DtiServerAction<any, any>>();
     private _raws = new Map<string, IRawActionBuilder[]>();
