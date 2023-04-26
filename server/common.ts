@@ -19,8 +19,8 @@ export interface Logger {
 
 export interface OSetupParam {
     factoryExpressRouter(dtiRouter: DtiRoute): any
-    factoryBodyparseJson(action: DtiAction<any,any>): IMiddleware
-    factoryBodyparseUrlencode(action: DtiAction<any,any>): IMiddleware
+    factoryBodyparseJson?: () => IMiddleware
+    factoryBodyparseUrlencode?: () => IMiddleware
 
 
 }

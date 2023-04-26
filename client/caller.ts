@@ -3,6 +3,9 @@ import { fetch } from "cross-fetch";
 import base64url from "base64url";
 import { DtiClientBuilder } from "./builder";
 import { DtiClientRoute } from "./route";
+import { BundleMeta } from "./bundler";
+
+
 
 export class DtiClientCaller<RESULT, PARAM> {
 
@@ -82,10 +85,6 @@ export class DtiClientCaller<RESULT, PARAM> {
             headers["Content-Type"] = "application/json"
         }
 
-
-
-
-
         return headers;
     }
 
@@ -95,6 +94,9 @@ export class DtiClientCaller<RESULT, PARAM> {
         return this.routeClient.buildUrl(this.meta.getPath());
     }
 
+    bundler(param: PARAM): BundleMeta<RESULT, PARAM> {
+        return { meta: this.meta, param }
+    }
 
 
     async call(param: PARAM): Promise<RESULT> {
@@ -104,11 +106,6 @@ export class DtiClientCaller<RESULT, PARAM> {
             throw DtiError.fromCode('validation', error)
         }
 
-
-
-
-
-
         let url = this.getUrl();
         let query = this.getQeury(param);
         let method = this.getMethod();
@@ -116,7 +113,7 @@ export class DtiClientCaller<RESULT, PARAM> {
         let headers = this.getHeaders(param);
         let body = this.getBody(param);
 
-       
+
 
         let resp = await fetch(url + (query ? `?${query}` : ''), {
             method, headers, body

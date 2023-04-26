@@ -4,7 +4,6 @@ import { IContext, IMiddleware } from "./common";
 export interface ODtiServerAction<RESULT, PARAM> {
     action: (param: PARAM, ctx: IContext) => Promise<RESULT>;
 
-    before?: Array<IMiddleware>;
 }
 
 export class DtiServerAction<RESULT, PARAM> {
@@ -17,9 +16,7 @@ export class DtiServerAction<RESULT, PARAM> {
         return this.opt.action(param, ctx);
     }
 
-    before(): Array<IMiddleware> {
-        return this.opt.before || [];
-    }
+    
 
     validation(param: PARAM) {
         this.meta.validate(param)

@@ -2,6 +2,7 @@ import { DtiError, DtiRoute } from "@napp/dti-core";
 import { DtiServerAction } from "./action";
 import { OSetupParam } from "./common";
 import { DtiServerRoute } from "./route";
+import { BundlerServer } from "./bundler";
 
 export interface IRawActionBuilder {
     (expressRoute: any): void
@@ -48,9 +49,9 @@ export class DtiServer {
 
 
     static setup(server: DtiServer, setuper: OSetupParam) {
-        let route = setuper.factoryExpressRouter(server.root);        
-        route.use(server.root.getLocalPath(), new DtiServerRoute(server.root, server).setup(setuper))
-
+        let route = setuper.factoryExpressRouter(server.root);
+        new BundlerServer(server).setup(route, setuper);
+        route.use(server.root.getLocalPath(), new DtiServerRoute(server.root, server).setup(setuper));
         route.use((err: any, req: any, res: any, next: any) => {
             res.status(500).json(DtiError.from(err).toPlanObject())
         })

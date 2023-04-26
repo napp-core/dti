@@ -1,7 +1,7 @@
 import { DtiMode, DtiRoute } from "@napp/dti-core";
 import { DtiServerAction } from "./action";
 import { OSetupParam } from "./common";
-import { DtiResponse } from "./response";
+
 import { DtiServer } from "./server";
 import base64url from "base64url";
 
@@ -19,7 +19,7 @@ export class DtiServerRoute {
             return req.query;
         } else if (mode === DtiMode.QJson) {
             try {
-                let p = req.query.p;
+                let p = req.query?.p;
                 if (p) {
                     let json = base64url.decode(p);
                     return JSON.parse(json);
@@ -44,12 +44,6 @@ export class DtiServerRoute {
             sa.validation(param);
             return sa.action(param, { req, res })
                 .then(rsu => {
-                    if (rsu instanceof DtiResponse) {
-                        if (rsu.handle) {
-                            return rsu.handle(res);
-                        }
-                        return res.end();
-                    }
                     return res.json(rsu);
                 })
                 .catch(err => next(err));
@@ -59,7 +53,7 @@ export class DtiServerRoute {
     }
 
     private setupAction(expressRoute: any, action: DtiServerAction<any, any>, setuper: OSetupParam) {
-        let befores = action.before();
+
         let mode = action.meta.getMode();
         let path = action.meta.getPath();
         let endpoint = (req: any, res: any, next: any) => {
@@ -70,11 +64,20 @@ export class DtiServerRoute {
 
 
         if (mode === DtiMode.QString || mode === DtiMode.QJson) {
-            expressRoute.get(path, [...befores, endpoint]);
+            expressRoute.get(path, endpoint);
         } else if (mode === DtiMode.BJson) {
-            expressRoute.post(path, [setuper.factoryBodyparseJson(action.meta), ...befores, endpoint]);
+            if (setuper.factoryBodyparseJson) {
+                expressRoute.post(path, [setuper.factoryBodyparseJson(), endpoint]);
+            } else {
+                throw new Error('not define server.factoryBodyparseJson');
+            }
         } else if (mode === DtiMode.BFrom) {
-            expressRoute.post(path, [setuper.factoryBodyparseUrlencode(action.meta), ...befores, endpoint]);
+            if (setuper.factoryBodyparseUrlencode) {
+                expressRoute.post(path, [setuper.factoryBodyparseUrlencode(), endpoint]);
+            } else {
+                throw new Error('not define server.factoryBodyparseUrlencode');
+            }
+
         } else {
             throw new Error("not support methid. logic error")
         }
@@ -96,7 +99,7 @@ export class DtiServerRoute {
     private setupRaws(expressRoute: any, setuper: OSetupParam) {
         let name = this.meta.getFullname();
         let handles = this.server.getRawByName(name);
-        
+
         if (Array.isArray(handles)) {
             for (let handle of handles) {
                 handle(expressRoute);

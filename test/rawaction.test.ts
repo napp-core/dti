@@ -1,8 +1,12 @@
+import { DtiAction } from "../core";
 import { api } from "./client.api";
 import { Test01Dti } from "./dti";
 import * as assert from 'assert';
 import fetch from 'cross-fetch';
 
+interface IBundlerAction<RESULT, PARAM> {
+    (dto: DtiAction<RESULT, RESULT>): { call: (param: PARAM) => Promise<RESULT> }
+}
 
 describe("Raw action test", () => {
     it("raw1", async () => {
@@ -12,4 +16,7 @@ describe("Raw action test", () => {
 
         assert.deepEqual({ a: '1', b: '2', d: { a: '1', b: '2' } }, result)
     });
+
+
+    
 });
