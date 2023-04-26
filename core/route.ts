@@ -4,6 +4,8 @@ import { DtiAction } from "./action";
 
 export interface ODtiRoute {
     path?: string;
+
+    childrens?: DtiRoute[];
 }
 
 export class DtiRoute {
@@ -89,6 +91,11 @@ export class DtiRoute {
             route.path = opt.path;
         }
 
+        if (opt?.childrens) {
+            for (let r of opt.childrens) {
+                route.regChildroute(r)
+            }
+        }
 
         return route;
     }
