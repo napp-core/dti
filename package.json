@@ -1,6 +1,6 @@
 {
   "name": "@napp/dti",
-  "version": "4.1.4",
+  "version": "4.1.5",
   "description": "data transaction interface core library",
   "repository": {
     "type": "git",
