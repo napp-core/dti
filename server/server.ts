@@ -36,6 +36,8 @@ export class DtiServer {
         } else {
             this._raws.set(name, [...handlers]);
         }
+
+        return this;
     }
 
 

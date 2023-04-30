@@ -123,7 +123,7 @@ export class DtiClientCaller<RESULT, PARAM> {
             let resu = await resp.text();
             if (resp.ok) {
                 try {
-                    return JSON.parse(resu);
+                    return resu ? JSON.parse(resu) : undefined;
                 } catch (error) {
                     throw DtiError.fromCode("InvalidJSON", resu)
                 }
