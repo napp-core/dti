@@ -1,4 +1,4 @@
-import { DtiAction, DtiRoute } from "@napp/dti-core";
+import { DtiRoute } from "@napp/dti-core";
 
 export interface IContext {
     req: any;

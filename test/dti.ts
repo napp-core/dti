@@ -106,6 +106,19 @@ export namespace Test01Dti {
         },
     });
 
+    export const customerVoid = DtiAction.define<void, CustomerPayload>({
+        name: 'void', mode: DtiMode.BJson,
+        route: routeCustomer,
+        validate(p) {
+            if (!p.name) {
+                throw new Error('name is requared');
+            }
+            if (!p.code) {
+                throw new Error('name is requared');
+            }
+        },
+    });
+
     export const raw1: IRawActionBuilder = (route) => {
 
 

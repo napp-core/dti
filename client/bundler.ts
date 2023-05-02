@@ -1,7 +1,9 @@
-import { DtiAction, DtiError, DtiErrorUnknown, DtiMode } from "@napp/dti-core";
+import { DtiAction, DtiMode } from "@napp/dti-core";
+import { Exception } from "@napp/exception";
 import { DtiClientBuilder } from "./builder";
 import { fetch } from "cross-fetch";
 import base64url from "base64url";
+import { responseHandle } from "./errorhandle";
 
 export interface BundleMeta<RESULT, PARAM> {
 
@@ -86,14 +88,7 @@ export class DtiClientBandler {
     }
 
     async call() {
-
-        try {
-            this.validate();
-        } catch (error) {
-            throw DtiError.fromCode('validation', error)
-        }
-
-        
+        this.validate();
 
         let method = this.getMethod();
 
@@ -116,9 +111,9 @@ export class DtiClientBandler {
             let resp = await fetch(`${baseUrl}/__bundler_get__?${q}`, {
                 method: 'get', headers
             });
-            return await this.respHandle(resp);
+            return await responseHandle(resp);
         } catch (error) {
-            throw DtiError.from(error)
+            throw Exception.from(error)
         }
     }
     private async callPost() {
@@ -133,42 +128,13 @@ export class DtiClientBandler {
                 method: 'post', headers, body: JSON.stringify(param)
             });
 
-            return await this.respHandle(resp);
+            return await responseHandle(resp);
         } catch (error) {
-            throw DtiError.from(error)
+            throw Exception.from(error)
         }
     }
 
-    private async respHandle(resp: Response) {
-
-        try {
-            let resu = await resp.text();
-            if (resp.ok) {
-                try {
-                    return JSON.parse(resu);
-                } catch (error) {
-                    throw DtiError.fromCode("InvalidJSON", resu)
-                }
-            }
-
-
-
-            try {
-                let errObject = JSON.parse(resu);
-                let error = DtiError.from(errObject);
-                if (error instanceof DtiErrorUnknown) {
-                    throw new DtiError('' + resp.status, resp.statusText);
-                }
-                throw error;
-            } catch (error) {
-                throw new DtiErrorUnknown(resu)
-            }
-
-        } catch (error) {
-            throw DtiError.from(error)
-        }
-
-    }
+    
 
 
 }

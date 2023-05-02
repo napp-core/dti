@@ -20,7 +20,7 @@ const userCreate = DtiServerAction.factory(Test01Dti.userCreate, {
 
 const userList = DtiServerAction.factory(Test01Dti.userList, {
     async action(param, ctx) {
-        
+
         return {
             order: param.order,
             items: [{
@@ -52,13 +52,19 @@ const customerList = DtiServerAction.factory(Test01Dti.customerList, {
     },
 })
 
+const customervoid = DtiServerAction.factory(Test01Dti.customerVoid, {
+    async action(param, ctx) {
+
+    },
+})
+
 const serverAdmin = new DtiServer(Test01Dti.routeAdmin);
 const serverWeb = new DtiServer(Test01Dti.routeWeb);
 
 
 serverWeb.register(userCreate, userList);
 serverWeb.rawRegister(Test01Dti.routeUser, Test01Dti.raw1);
-serverAdmin.register(customerCreate, customerList)
+serverAdmin.register(customerCreate, customerList, customervoid)
 
 
 

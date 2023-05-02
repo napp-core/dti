@@ -1,5 +1,5 @@
 import { DtiAction } from "@napp/dti-core";
-import { IContext, IMiddleware } from "./common";
+import { IContext } from "./common";
 
 export interface ODtiServerAction<RESULT, PARAM> {
     action: (param: PARAM, ctx: IContext) => Promise<RESULT>;

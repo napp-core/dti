@@ -1,9 +1,10 @@
-import { DtiAction, DtiError, DtiErrorUnknown, DtiMode } from "@napp/dti-core";
+import { DtiAction, DtiMode } from "@napp/dti-core";
 import { fetch } from "cross-fetch";
 import base64url from "base64url";
 import { DtiClientBuilder } from "./builder";
 import { DtiClientRoute } from "./route";
 import { BundleMeta } from "./bundler";
+import { responseHandle } from "./errorhandle";
 
 
 
@@ -100,11 +101,7 @@ export class DtiClientCaller<RESULT, PARAM> {
 
 
     async call(param: PARAM): Promise<RESULT> {
-        try {
-            this.validate(param);
-        } catch (error) {
-            throw DtiError.fromCode('validation', error)
-        }
+        this.validate(param);
 
         let url = this.getUrl();
         let query = this.getQeury(param);
@@ -119,32 +116,6 @@ export class DtiClientCaller<RESULT, PARAM> {
             method, headers, body
         });
 
-        try {
-            let resu = await resp.text();
-            if (resp.ok) {
-                try {
-                    return resu ? JSON.parse(resu) : undefined;
-                } catch (error) {
-                    throw DtiError.fromCode("InvalidJSON", resu)
-                }
-            }
-
-
-
-            try {
-                let errObject = JSON.parse(resu);
-                let error = DtiError.from(errObject);
-                if (error instanceof DtiErrorUnknown) {
-                    throw new DtiError('' + resp.status, resp.statusText);
-                }
-                throw error;
-            } catch (error) {
-                throw new DtiErrorUnknown(resu)
-            }
-
-
-        } catch (error) {
-            throw DtiError.from(error)
-        }
+        return responseHandle(resp)
     }
 }
