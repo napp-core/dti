@@ -58,7 +58,9 @@ export class DtiClientCaller<RESULT, PARAM> {
             }
         } else if (m === DtiMode.QString) {
             if (param) {
-                return new URLSearchParams(param as any).toString()
+                let json = JSON.stringify(param);
+                let obj = JSON.parse(json);
+                return new URLSearchParams(obj).toString()
             }
         }
 
