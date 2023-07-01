@@ -1,13 +1,13 @@
-import { DtiMode, DtiRoute } from "@napp/dti-core";
+import { DtiMode, DtiRoute, Base62 } from "@napp/dti-core";
 import { DtiServerAction } from "./action";
 import { OSetupParam } from "./common";
 
 import { DtiServer } from "./server";
-import base64url from "base64url";
+
 
 
 export class DtiServerRoute {
-
+    private base62 = new Base62();
     constructor(private meta: DtiRoute, private server: DtiServer) { }
 
     private param(action: DtiServerAction<any, any>, req: any) {
@@ -21,7 +21,7 @@ export class DtiServerRoute {
             try {
                 let p = req.query?.p;
                 if (p) {
-                    let json = base64url.decode(p);
+                    let json = this.base62.decode(p);
                     return JSON.parse(json);
                 }
 

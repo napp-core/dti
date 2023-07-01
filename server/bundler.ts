@@ -1,4 +1,5 @@
-import base64url from "base64url";
+
+import { Base62 } from "@napp/dti-core";
 import { IContext, OSetupParam } from "./common";
 import { DtiServer } from "./server";
 
@@ -9,7 +10,7 @@ interface IMeteParam {
 }
 
 export class BundlerServer {
-
+    private base62 = new Base62()
     constructor(private server: DtiServer) {
 
     }
@@ -53,7 +54,7 @@ export class BundlerServer {
                 try {
                     let p = req.query?.p;
                     if (p) {
-                        let json = base64url.decode(p);
+                        let json = this.base62.decode(p);
                         let meta: Array<IMeteParam> = JSON.parse(json);
 
                         let result = await this.action(meta, { req, res });

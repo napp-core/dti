@@ -1,6 +1,5 @@
-import { DtiAction, DtiMode } from "@napp/dti-core";
+import { DtiAction, DtiMode, Base62 } from "@napp/dti-core";
 import { fetch } from "cross-fetch";
-import base64url from "base64url";
 import { DtiClientBuilder } from "./builder";
 import { DtiClientRoute } from "./route";
 import { BundleMeta } from "./bundler";
@@ -10,6 +9,7 @@ import { responseHandle } from "./errorhandle";
 
 export class DtiClientCaller<RESULT, PARAM> {
 
+    private base62 = new Base62();
     private routeClient: DtiClientRoute;
     constructor(private meta: DtiAction<RESULT, PARAM>, private builder: DtiClientBuilder) {
         this.routeClient = new DtiClientRoute(meta.getRoute(), builder);
@@ -53,7 +53,7 @@ export class DtiClientCaller<RESULT, PARAM> {
         let m = this.meta.getMode();
         if (m === DtiMode.QJson) {
             if (param) {
-                let p = base64url.encode(JSON.stringify(param));
+                let p = this.base62.encode(JSON.stringify(param));
                 return new URLSearchParams({ p }).toString()
             }
         } else if (m === DtiMode.QString) {

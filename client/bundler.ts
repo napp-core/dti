@@ -1,8 +1,7 @@
-import { DtiAction, DtiMode } from "@napp/dti-core";
+import { DtiAction, DtiMode,Base62 } from "@napp/dti-core";
 import { Exception } from "@napp/exception";
 import { DtiClientBuilder } from "./builder";
 import { fetch } from "cross-fetch";
-import base64url from "base64url";
 import { responseHandle } from "./errorhandle";
 
 export interface BundleMeta<RESULT, PARAM> {
@@ -15,6 +14,7 @@ export interface BundleMeta<RESULT, PARAM> {
 
 export class DtiClientBandler {
 
+    private base62 = new Base62();
 
     constructor(private bundleMetas: Array<BundleMeta<any, any>>, private builder: DtiClientBuilder) {
 
@@ -105,7 +105,7 @@ export class DtiClientBandler {
             let param = this.getParam();
             let headers = this.getHeaders();
 
-            let p = base64url.encode(JSON.stringify(param));
+            let p = this.base62.encode(JSON.stringify(param));
             let q = new URLSearchParams({ p }).toString();
 
             let resp = await fetch(`${baseUrl}/__bundler_get__?${q}`, {

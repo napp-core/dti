@@ -6,6 +6,10 @@
         "type": "git",
         "url": "https://github.com/napp-core/dti.git"
     },
+    "dependencies": {
+        "base-x": "latest",
+        "fast-text-encoding": "latest"
+    },
     "types": "index.d.ts",
     "main": "index.js",
     "keywords": [

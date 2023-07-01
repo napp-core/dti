@@ -17,7 +17,6 @@
     "license": "ISC",
     "dependencies": {
         "@napp/dti-core": "latest",
-        "@napp/exception": "^4.1.2",
-        "base64url": "latest"
+        "@napp/exception": "^4.1.2"        
     }
 }
