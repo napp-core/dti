@@ -8,6 +8,10 @@ export interface IContext {
 export interface IMiddleware {
     (req: any, res: any, next: any): void
 }
+export interface IErrorHandle {
+    (req: any, res: any, next: any): void
+}
+
 export interface IExpressRoute {
     get(path: string, handlers: IMiddleware[]): void;
     post(path: string, handlers: IMiddleware[]): void;
@@ -21,6 +25,5 @@ export interface OSetupParam {
     factoryExpressRouter(dtiRouter: DtiRoute): any
     factoryBodyparseJson?: () => IMiddleware
     factoryBodyparseUrlencode?: () => IMiddleware
-
-
+    errorHandle?: IErrorHandle
 }

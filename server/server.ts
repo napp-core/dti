@@ -3,7 +3,6 @@ import { DtiServerAction } from "./action";
 import { OSetupParam } from "./common";
 import { DtiServerRoute } from "./route";
 import { BundlerServer } from "./bundler";
-import { Exception } from "@napp/exception";
 
 export interface IRawActionBuilder {
     (expressRoute: any): void
@@ -55,12 +54,10 @@ export class DtiServer {
         let route = setuper.factoryExpressRouter(server.root);
         new BundlerServer(server).setup(route, setuper);
         route.use(server.root.getLocalPath(), new DtiServerRoute(server.root, server).setup(setuper));
-        route.use((err: any, req: any, res: any, next: any) => {
-            let error = Exception.from(err);
-            let status = error.status || 500;
 
-            res.status(status).json(error.toPlan())
-        })
+        if(setuper.errorHandle) {
+            route.use(setuper.errorHandle)
+        }
         return route;
     }
 
