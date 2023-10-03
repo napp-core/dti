@@ -12,7 +12,7 @@
     "@types/mocha": "^10.0.1",
     "base-x": "latest",
     "cross-fetch": "latest",
-    "fast-text-encoding": "*",
+    "fast-text-encoding": "latest",
     "express": "^4.18.2",
     "mocha": "^10.2.0",
     "rimraf": "^5.0.5",

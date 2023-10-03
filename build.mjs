@@ -1,34 +1,42 @@
 import fs from 'fs';
+import mPkg from './package.json' assert {type: 'json'};
 
-let mPkg = readPk('package.json');
-
-function readPk(file) {
-    let txt = fs.readFileSync(file);
-    return JSON.parse(txt);
-}
+import corePkg from './core.package.json' assert {type: 'json'};
+import clientPkg from './client.package.json' assert {type: 'json'};
+import serverPkg from './server.package.json' assert {type: 'json'};
 
 { // core
-    let cPkg = readPk('core.package.json');
-    cPkg.version = mPkg.version;
-    fs.writeFileSync('dist/core/package.json', JSON.stringify(cPkg, null, 4));
+
+    corePkg.version = mPkg.version;
+    for (let d in corePkg.dependencies) {
+        corePkg.dependencies[d] = mPkg.dependencies[d];
+    }
+
+    fs.writeFileSync('dist/core/package.json', JSON.stringify(corePkg, null, 4));
 
     console.log('copy: core/package.json')
 }
 
 { // client
-    let cPkg = readPk('client.package.json');
-    cPkg.version = mPkg.version;
-    cPkg.dependencies["@napp/dti-core"] = mPkg.version;
-    fs.writeFileSync('dist/client/package.json', JSON.stringify(cPkg, null, 4));
+    
+    clientPkg.version = mPkg.version;
+    for (let d in clientPkg.dependencies) {
+        clientPkg.dependencies[d] = mPkg.dependencies[d];
+    }
+    clientPkg.dependencies["@napp/dti-core"] = mPkg.version;
+    fs.writeFileSync('dist/client/package.json', JSON.stringify(clientPkg, null, 4));
 
     console.log('copy: client/package.json')
 }
 
 { // server
-    let cPkg = readPk('server.package.json');
-    cPkg.version = mPkg.version;
-    cPkg.dependencies["@napp/dti-core"] = mPkg.version;
-    fs.writeFileSync('dist/server/package.json', JSON.stringify(cPkg, null, 4));
+    
+    serverPkg.version = mPkg.version;
+    for (let d in serverPkg.dependencies) {
+        serverPkg.dependencies[d] = mPkg.dependencies[d];
+    }
+    serverPkg.dependencies["@napp/dti-core"] = mPkg.version;
+    fs.writeFileSync('dist/server/package.json', JSON.stringify(serverPkg, null, 4));
 
     console.log('copy: client/package.json')
 }
