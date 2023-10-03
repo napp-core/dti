@@ -14,7 +14,7 @@ export async function responseHandle<T>(resp: Response) {
                     })
                 }
             }
-            return void 0 as any;
+            return void 0 as T;
         }
 
         if (rsu) {
