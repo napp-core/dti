@@ -1,36 +1,36 @@
 import { Exception, ExceptionNames } from "@napp/exception";
-export async function responseHandle(resp: Response) {
+export async function responseHandle<T>(resp: Response) {
 
     try {
-
+        let rsu = await resp.text();
         if (resp.ok) {
-            try {
-                return await resp.json()
-            } catch (error) {
-                throw new Exception("not supported result", {
-                    name: ExceptionNames.Server,
-                    cause: Exception.from(error)
-                })
+            if (rsu) {
+                try {
+                    let value:T = JSON.parse(rsu)
+                    return value;
+                } catch (error) {
+                    throw new Exception(rsu, {
+                        name: ExceptionNames.Server,
+                    })
+                }
             }
+            return void 0 as any;
         }
 
-        let resu = await resp.text();
-        if (resu) {
+        if (rsu) {
+            let err: Exception;
             try {
-                let errObject = JSON.parse(resu);
-                throw Exception.from(errObject);
+                let errObject = JSON.parse(rsu);
+                err = Exception.from(errObject);
             } catch (error) {
-                throw new Exception("not supported result", {
+                err = new Exception(rsu, {
                     name: ExceptionNames.Server,
-                    cause: new Exception(resu, { name: 'raw.result' })
                 })
             }
-
+            throw err;
         }
-
-        throw new Exception("not supported result", {
+        throw new Exception(`status=${resp.status}. ${resp.statusText}`, {
             name: ExceptionNames.Server,
-            cause: new Exception("server empty result", { name: 'raw.result' })
         })
 
     } catch (error) {

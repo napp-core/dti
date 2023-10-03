@@ -111,7 +111,7 @@ export class DtiClientBandler {
             let resp = await fetch(`${baseUrl}/__bundler_get__?${q}`, {
                 method: 'get', headers
             });
-            return await responseHandle(resp);
+            return await responseHandle<any>(resp);
         } catch (error) {
             throw Exception.from(error)
         }
@@ -128,7 +128,7 @@ export class DtiClientBandler {
                 method: 'post', headers, body: JSON.stringify(param)
             });
 
-            return await responseHandle(resp);
+            return await responseHandle<any>(resp);
         } catch (error) {
             throw Exception.from(error)
         }

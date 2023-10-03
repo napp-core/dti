@@ -103,6 +103,12 @@ export class DtiClientCaller<RESULT, PARAM> {
 
 
     async call(param: PARAM): Promise<RESULT> {
+
+        let resp = await this.callRaw(param)
+
+        return await responseHandle<RESULT>(resp)
+    }
+    async callRaw(param: PARAM): Promise<Response> {
         this.validate(param);
 
         let url = this.getUrl();
@@ -114,10 +120,10 @@ export class DtiClientCaller<RESULT, PARAM> {
 
 
 
-        let resp = await fetch(url + (query ? `?${query}` : ''), {
+        return await fetch(url + (query ? `?${query}` : ''), {
             method, headers, body
         });
 
-        return responseHandle(resp)
+
     }
 }

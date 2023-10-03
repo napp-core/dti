@@ -1,4 +1,4 @@
-import { DtiMode, DtiRoute, Base62 } from "@napp/dti-core";
+import { DtiMode, DtiRoute, Base62, DtiRawResponse } from "@napp/dti-core";
 import { DtiServerAction } from "./action";
 import { OSetupParam } from "./common";
 
@@ -44,7 +44,9 @@ export class DtiServerRoute {
             sa.validation(param);
             return sa.action(param, { req, res })
                 .then(rsu => {
-                    return res.json(rsu);
+                    if (DtiRawResponse.is(rsu) === false) {
+                        return res.json(rsu);
+                    }
                 })
                 .catch(err => next(err));
         } catch (error) {

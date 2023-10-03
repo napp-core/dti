@@ -17,9 +17,6 @@ export interface IExpressRoute {
     post(path: string, handlers: IMiddleware[]): void;
     use(path: string, route: IExpressRoute): void;
 }
-export interface Logger {
-    (level: string, message: string): void
-}
 
 export interface OSetupParam {
     factoryExpressRouter(dtiRouter: DtiRoute): any
