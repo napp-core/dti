@@ -16,7 +16,7 @@
     "author": "Farcek <farcek@gmail.com>",
     "license": "ISC",
     "dependencies": {
-        "@napp/exception": "^4.1.2",
+        "@napp/exception": "^5.1.8",
         "@napp/dti-core": "latest",        
         "cross-fetch": "latest"
     }

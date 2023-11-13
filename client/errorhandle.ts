@@ -1,12 +1,12 @@
 import { Exception, ExceptionNames } from "@napp/exception";
-export async function responseHandle<T>(resp: Response) {
+export async function responseHandle<T>(resp: Response, parser?: (errObject: any) => Exception) {
 
     try {
         let rsu = await resp.text();
         if (resp.ok) {
             if (rsu) {
                 try {
-                    let value:T = JSON.parse(rsu)
+                    let value: T = JSON.parse(rsu)
                     return value;
                 } catch (error) {
                     throw new Exception(rsu, {
@@ -21,7 +21,12 @@ export async function responseHandle<T>(resp: Response) {
             let err: Exception;
             try {
                 let errObject = JSON.parse(rsu);
-                err = Exception.from(errObject);
+                if (parser) {
+                    err = parser(errObject)
+                } else {
+                    err = Exception.from(errObject);
+                }
+
             } catch (error) {
                 err = new Exception(rsu, {
                     name: ExceptionNames.Server,
