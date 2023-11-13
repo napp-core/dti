@@ -1,5 +1,5 @@
 import { Exception, ExceptionNames } from "@napp/exception";
-export async function responseHandle<T>(resp: Response, parser?: (errObject: any) => Exception) {
+export async function responseHandle<T>(resp: Response, parser?: (errObject: any) => Exception | undefined) {
 
     try {
         let rsu = await resp.text();
@@ -22,7 +22,12 @@ export async function responseHandle<T>(resp: Response, parser?: (errObject: any
             try {
                 let errObject = JSON.parse(rsu);
                 if (parser) {
-                    err = parser(errObject)
+                    let e1 = parser(errObject);
+                    if (e1) {
+                        err = e1;
+                    } else {
+                        err = Exception.from(errObject);
+                    }
                 } else {
                     err = Exception.from(errObject);
                 }
