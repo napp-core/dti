@@ -1,4 +1,4 @@
-import { Exception, ExceptionNames } from "@napp/exception";
+import { Exception } from "@napp/exception";
 export async function responseHandle<T>(resp: Response, parser?: (errObject: any) => Exception | undefined) {
 
     try {
@@ -10,7 +10,7 @@ export async function responseHandle<T>(resp: Response, parser?: (errObject: any
                     return value;
                 } catch (error) {
                     throw new Exception(rsu, {
-                        name: ExceptionNames.Server,
+                        kind: 'serviceunavailable',
                     })
                 }
             }
@@ -34,13 +34,13 @@ export async function responseHandle<T>(resp: Response, parser?: (errObject: any
 
             } catch (error) {
                 err = new Exception(rsu, {
-                    name: ExceptionNames.Server,
+                    kind: 'serviceunavailable',
                 })
             }
             throw err;
         }
         throw new Exception(`status=${resp.status}. ${resp.statusText}`, {
-            name: ExceptionNames.Server,
+            kind: 'serviceunavailable',
         })
 
     } catch (error) {

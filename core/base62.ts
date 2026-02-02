@@ -1,4 +1,4 @@
-import 'fast-text-encoding';
+
 import base from 'base-x'
 export class Base62 {
     private convert: base.BaseConverter;

@@ -15,8 +15,10 @@
     ],
     "author": "Farcek <farcek@gmail.com>",
     "license": "ISC",
-    "dependencies": {
-        "@napp/dti-core": "latest",
+    "peerDependencies": {
         "@napp/exception": "^5.1.8"
+    },
+    "dependencies": {
+        "@napp/dti-core": "latest"
     }
 }

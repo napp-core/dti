@@ -7,8 +7,7 @@
         "url": "https://github.com/napp-core/dti.git"
     },
     "dependencies": {
-        "base-x": "latest",
-        "fast-text-encoding": "latest"
+        "base-x": "latest"
     },
     "types": "index.d.ts",
     "main": "index.js",
