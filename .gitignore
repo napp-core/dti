@@ -1,5 +1,4 @@
 /dist
 /tsc.dist
-/package-lock.json
 /node_modules
 /.npmrc
