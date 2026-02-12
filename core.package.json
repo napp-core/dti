@@ -11,6 +11,14 @@
     },
     "types": "index.d.ts",
     "main": "index.js",
+    "module": "esm/index.js",
+    "exports": {
+        ".": {
+            "require": "./index.js",
+            "import": "./esm/index.js",
+            "types": "./index.d.ts"
+        }
+    },
     "keywords": [
         "napp",
         "Rest API",
