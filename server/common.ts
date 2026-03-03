@@ -1,4 +1,4 @@
-import { DtiRoute } from "@napp/dti-core";
+import { DtiRoute, DtiAction } from "@napp/dti-core";
 
 export interface IContext {
     req: any;
@@ -23,4 +23,6 @@ export interface OSetupParam {
     factoryBodyparseJson?: () => IMiddleware
     factoryBodyparseUrlencode?: () => IMiddleware
     errorHandle?: IErrorHandle
+
+    signatureSecret?: { (): Promise<string> }
 }

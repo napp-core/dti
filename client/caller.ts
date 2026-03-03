@@ -5,7 +5,34 @@ import { DtiClientRoute } from "./route";
 import { BundleMeta } from "./bundler";
 import { responseHandle } from "./errorhandle";
 
+function getRandomInt(min: number, max: number) {
+    const minCeiled = Math.ceil(min);
+    const maxFloored = Math.floor(max);
+    // The maximum is exclusive and the minimum is inclusive
+    return Math.floor(Math.random() * (maxFloored - minCeiled) + minCeiled);
+}
 
+async function hmacSignBase64(secret: string, data: string) {
+    const enc = new TextEncoder();
+
+
+
+    const key = await crypto.subtle.importKey(
+        "raw",
+        enc.encode(secret),
+        { name: "HMAC", hash: "SHA-256" },
+        false,
+        ["sign"]
+    );
+
+    const sigBuf = await crypto.subtle.sign("HMAC", key, enc.encode(data));
+    const sigBytes = new Uint8Array(sigBuf);
+
+    // base64 encode
+    let bin = "";
+    sigBytes.forEach(b => (bin += String.fromCharCode(b)));
+    return btoa(bin);
+}
 
 export class DtiClientCaller<RESULT, PARAM> {
 
@@ -82,6 +109,7 @@ export class DtiClientCaller<RESULT, PARAM> {
 
 
 
+
         if (m === DtiMode.BFrom) {
             headers["Content-Type"] = "application/x-www-form-urlencoded"
         } else {
@@ -89,6 +117,31 @@ export class DtiClientCaller<RESULT, PARAM> {
         }
 
         return headers;
+    }
+
+    private async signature(data: string) {
+        const nonce: string = '' + getRandomInt(10000, 99999)
+        const timestamp: string = '' + Math.round(Date.now() / 1000);
+        const secretResolver = this.builder.getSignatureResolver();
+
+        if (secretResolver) {
+            const secret = await secretResolver();
+            if (secret) {
+
+
+                const signature = await hmacSignBase64(secret, `${timestamp}.${nonce}.${data}`)
+                return {
+                    nonce, timestamp, signature
+                }
+            }
+        }
+
+
+
+        return {
+            nonce, timestamp,
+            signature: ''
+        }
     }
 
 
@@ -118,6 +171,24 @@ export class DtiClientCaller<RESULT, PARAM> {
         let headers = this.getHeaders(param);
         let body = this.getBody(param);
 
+
+        const signData = this.meta.sign(param);
+        if (signData) {
+            const { nonce, signature, timestamp } = await this.signature(signData);
+            if (signature) {
+                // console.log('method', method)
+                // console.log('------------method', method, this.meta.getFullname())
+                // console.log('timestamp', timestamp)
+                // console.log('nonce', nonce)
+                // console.log('signature', signature)
+
+
+                headers["X-DTI-Timestamp"] = timestamp
+                headers["X-DTI-Nonce"] = nonce
+                headers["X-DTI-Signature"] = signature
+            }
+
+        }
 
 
         return await fetch(url + (query ? `?${query}` : ''), {

@@ -38,10 +38,10 @@ export class DtiServerRoute {
         throw new Error('not supported mode')
     }
 
-    private callAction(sa: DtiServerAction<any, any>, req: any, res: any, next: any) {
+    private async callAction(sa: DtiServerAction<any, any>, req: any, res: any, next: any) {
         try {
             let param = this.param(sa, req);
-            sa.validation(param);
+            await sa.validation(this.server, param, req);
             return sa.action(param, { req, res })
                 .then(rsu => {
                     if (DtiRawResponse.is(rsu) === false) {
@@ -58,8 +58,8 @@ export class DtiServerRoute {
 
         let mode = action.meta.getMode();
         let path = action.meta.getPath();
-        let endpoint = (req: any, res: any, next: any) => {
-            this.callAction(action, req, res, next)
+        let endpoint = async (req: any, res: any, next: any) => {
+            await this.callAction(action, req, res, next)
         };
 
 

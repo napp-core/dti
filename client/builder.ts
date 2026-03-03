@@ -40,6 +40,17 @@ export class DtiClientBuilder {
     }
 
 
+    private signatureSecretResolver: { (): Promise<string> } | undefined = undefined;
+    signatureSecret(resolver: { (): Promise<string> } | undefined) {
+        this.signatureSecretResolver = resolver;
+
+        return this;
+    }
+
+
+    getSignatureResolver() {
+        return this.signatureSecretResolver;
+    }
 
 
     build() {

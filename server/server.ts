@@ -1,18 +1,26 @@
-import { DtiRoute } from "@napp/dti-core";
+import { DtiAction, DtiRoute } from "@napp/dti-core";
 import { DtiServerAction } from "./action";
 import { OSetupParam } from "./common";
 import { DtiServerRoute } from "./route";
 import { BundlerServer } from "./bundler";
 
+
 export interface IRawActionBuilder {
     (expressRoute: any): void
 }
+
+export interface ISignatureVerify {
+    (data: string): Promise<string>
+}
+
+
 export class DtiServer {
 
     constructor(private root: DtiRoute) { }
 
     private _actions = new Map<string, DtiServerAction<any, any>>();
     private _raws = new Map<string, IRawActionBuilder[]>();
+    private _signatureSecret: { (): Promise<string> } | undefined = undefined;
     register(...actions: DtiServerAction<any, any>[]) {
 
         for (let action of actions) {
@@ -49,15 +57,21 @@ export class DtiServer {
         return this._raws.get(name);
     }
 
+    get signatureSecret() {
+        return this._signatureSecret;
+    }
+
+
 
     static setup(server: DtiServer, setuper: OSetupParam) {
         let route = setuper.factoryExpressRouter(server.root);
         new BundlerServer(server).setup(route, setuper);
         route.use(server.root.getLocalPath(), new DtiServerRoute(server.root, server).setup(setuper));
 
-        if(setuper.errorHandle) {
+        if (setuper.errorHandle) {
             route.use(setuper.errorHandle)
         }
+        server._signatureSecret = setuper.signatureSecret
         return route;
     }
 

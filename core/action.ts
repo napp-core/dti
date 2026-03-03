@@ -4,12 +4,13 @@ import { DtiRoute } from "./route";
 interface ODtiAction<RESULT, PARAM> {
     name: string;
     route: DtiRoute;
-
     mode?: DtiMode;
     path?: string;
     validate?: (p: PARAM) => void
+
+    sign?: (p: PARAM) => string
 }
-export class DtiAction<RESULT, PARAM>{
+export class DtiAction<RESULT, PARAM> {
 
 
     private constructor(private opt: ODtiAction<RESULT, PARAM>) {
@@ -39,6 +40,13 @@ export class DtiAction<RESULT, PARAM>{
         if (this.opt.validate) {
             this.opt.validate(p);
         }
+    }
+
+    sign(p: PARAM) {
+        if (this.opt.sign) {
+            return this.opt.sign(p);
+        }
+        return ''
     }
 
     static define<RESULT, PARAM>(opt: ODtiAction<RESULT, PARAM>) {

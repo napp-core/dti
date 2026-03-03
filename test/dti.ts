@@ -16,8 +16,8 @@ export namespace Test01Dti {
         order: string;
         items: IUserItem[]
     }
-  
-    
+
+
 
     export interface UserCreateResult {
         id: string,
@@ -68,6 +68,11 @@ export namespace Test01Dti {
                 throw new Error('name is requared');
             }
         },
+        sign(p) {
+            return [
+                p.age, p.name
+            ].join(',')
+        },
     });
     export const userList = DtiAction.define<IUserListResult, IUserListParam>({
         name: 'user-list', path: 'userlist', mode: DtiMode.QString,
@@ -77,6 +82,9 @@ export namespace Test01Dti {
             if (!p.order) {
                 throw new Error('order is no defined')
             }
+        },
+        sign(p) {
+            return [p.order].join('-')
         },
 
     });
@@ -90,6 +98,9 @@ export namespace Test01Dti {
             if (!p.code) {
                 throw new Error('code is requared');
             }
+        },
+        sign(p) {
+            return [p.name, p.code].join(';')
         },
     });
 

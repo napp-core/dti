@@ -67,23 +67,44 @@ serverWeb.rawRegister(Test01Dti.routeUser, Test01Dti.raw1);
 serverAdmin.register(customerCreate, customerList, customervoid)
 
 
+// function verifyHmacBase64(secret:string, timestamp, nonce, data, signatureB64) {
+//   const message = `${timestamp}\n${nonce}\n${data}`;
 
+//   const expected = crypto
+//     .createHmac("sha256", secret)
+//     .update(message, "utf8")
+//     .digest("base64");
+
+//   // constant-time compare
+//   const a = Buffer.from(expected, "base64");
+//   const b = Buffer.from(signatureB64, "base64");
+
+//   if (a.length !== b.length) return false;
+//   return crypto.timingSafeEqual(a, b);
+// }
 
 function setup() {
     const app: Express = express();
     const port = process.env.PORT || 3000;
 
+    const secret = '123134564678979';
 
 
     app.use('/web-api', DtiServer.setup(serverWeb, {
         factoryExpressRouter: () => express.Router(),
         factoryBodyparseJson: () => express.json(),
         factoryBodyparseUrlencode: () => express.urlencoded(),
+        async signatureSecret() {
+            return secret
+        },
     }))
     app.use('/admin-api', DtiServer.setup(serverAdmin, {
         factoryExpressRouter: () => express.Router(),
         factoryBodyparseJson: () => express.json(),
         factoryBodyparseUrlencode: () => express.urlencoded(),
+        async signatureSecret() {
+            return secret
+        },
     }))
 
 

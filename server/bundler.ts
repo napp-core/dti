@@ -9,6 +9,8 @@ interface IMeteParam {
     param: any;
 }
 
+
+
 export class BundlerServer {
     private base62 = new Base62()
     constructor(private server: DtiServer) {
@@ -22,7 +24,7 @@ export class BundlerServer {
         for (let it of meta) {
             let action = this.server.getActionByName(it.name);
             if (action) {
-                action.validation(it.param);
+                await action.validation(this.server, it.param, ctx.req, true);
 
                 // console.log('call', it.name, it.param, await action?.action(it.param, ctx))
 
